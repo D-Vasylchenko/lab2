@@ -1,9 +1,41 @@
 package lab2
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+	"unicode"
+)
 
-// TODO: document this function.
-// PrefixToPostfix converts
-func PrefixToPostfix(input string) (string, error) {
-	return "TODO", fmt.Errorf("TODO")
+func isOperand(s string) bool {
+	for _, r := range s {
+		if !unicode.IsDigit(r) {
+			return false
+		}
+	}
+	return true
+}
+
+func postfixToLisp(postfix string) string {
+	var stack []string
+
+	tokens := strings.Fields(postfix)
+
+	for _, token := range tokens {
+		if isOperand(token) {
+			stack = append(stack, token)
+		} else {
+			operand2 := stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+			operand1 := stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+
+			if token == "^" {
+				token = "pow"
+			}
+
+			stack = append(stack, fmt.Sprintf("(%s %s %s)", token, operand1, operand2))
+		}
+	}
+
+	return stack[0]
 }
