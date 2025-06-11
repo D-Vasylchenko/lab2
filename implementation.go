@@ -16,6 +16,10 @@ func isOperand(s string) bool {
 }
 
 func postfixToLisp(postfix string) string {
+	if postfix == "" {
+		return ""
+	}
+
 	var stack []string
 
 	tokens := strings.Fields(postfix)
@@ -23,7 +27,10 @@ func postfixToLisp(postfix string) string {
 	for _, token := range tokens {
 		if isOperand(token) {
 			stack = append(stack, token)
-		} else {
+		} else if token == "^" || token == "+" || token == "-" || token == "*" {
+			if len(stack) < 2 {
+				return "" 
+			}
 			operand2 := stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
 			operand1 := stack[len(stack)-1]
@@ -34,8 +41,15 @@ func postfixToLisp(postfix string) string {
 			}
 
 			stack = append(stack, fmt.Sprintf("(%s %s %s)", token, operand1, operand2))
+		} else {
+			return ""
 		}
+	}
+
+	if len(stack) != 1 {
+		return ""
 	}
 
 	return stack[0]
 }
+
