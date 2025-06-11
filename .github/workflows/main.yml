@@ -31,10 +31,3 @@ jobs:
         make clean  # Clean generated files
         make test   # Run tests
         make        # Build the project
-
-    - name: Upload build artifacts
-      if: success()  # This will only run if the build is successful
-      uses: actions/upload-artifact@v3  # Updated to v3
-      with:
-        name: build-artifacts
-        path: ./out/example  # Path to your generated binary file
