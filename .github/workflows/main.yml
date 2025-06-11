@@ -1,39 +1,40 @@
 name: Go Build and Test
 
+# Trigger the workflow on push or pull request to the main branch
 on:
   push:
     branches:
-      - master  
+      - main
   pull_request:
     branches:
-      - master  
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2  
+      uses: actions/checkout@v2  # Checkout the code from the repository
 
     - name: Set up Go
-      uses: actions/setup-go@v2  
+      uses: actions/setup-go@v2  # Set up Go environment
       with:
-        go-version: '1.22'  
+        go-version: '1.22'  # Specify the Go version you are using
 
     - name: Install dependencies
       run: |
-        go mod tidy 
+        go mod tidy  # Download dependencies for your Go project
 
     - name: Run Makefile tasks
       run: |
-        make clean 
-        make test  
-        make       
+        make clean  # Clean generated files
+        make test   # Run tests
+        make        # Build the project
 
     - name: Upload build artifacts
-      if: success() 
-      uses: actions/upload-artifact@v2
+      if: success()  # This will only run if the build is successful
+      uses: actions/upload-artifact@v3  # Updated to v3
       with:
         name: build-artifacts
-        path: ./out/example
+        path: ./out/example  # Path to your generated binary file
